@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Al Muneer Quran School Management System</title>
+<style>
+.lang-toggle{border:1px solid var(--border);background:#fff;color:var(--navy);border-radius:9px;padding:8px 12px;font-weight:700;cursor:pointer}
+.rtl{direction:rtl}
+.rtl .sidebar{left:auto;right:0}
+.rtl .main{margin-left:0;margin-right:245px}
+.rtl .nav button{text-align:right}
+.rtl .topbar,.rtl .content{text-align:right}
+.rtl .table th,.rtl .table td{text-align:right}
+.rtl .toolbar,.rtl .section-title{direction:rtl}
+.rtl .student-head{direction:rtl}
+.rtl .form{text-align:right}
+@media(max-width:720px){
+ .rtl .main{margin-right:70px;margin-left:0}
+}
+:root{
+  --navy:#183a73; --blue:#2e65a7; --cyan:#49a8c7; --teal:#238da0;
+  --light:#eef6fa; --lighter:#f7fbfd; --text:#18324d; --muted:#6b7f93;
+  --white:#fff; --border:#dbe7ef; --danger:#c84b57; --success:#2c8a68;
+  --shadow:0 10px 30px rgba(24,58,115,.08);
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:Segoe UI,Arial,sans-serif;background:var(--lighter);color:var(--text)}
+button,input,select,textarea{font:inherit}
+button{cursor:pointer}
+.login{min-height:100vh;display:grid;place-items:center;background:linear-gradient(135deg,#eef7fb,#fff)}
+.login-card{width:min(440px,92%);background:#fff;border:1px solid var(--border);border-radius:24px;padding:36px;box-shadow:var(--shadow);text-align:center}
+.logo{width:125px;height:125px;object-fit:contain;margin:auto;display:block}
+.login h1{font-family:Georgia,serif;color:var(--navy);margin:10px 0 2px;font-size:27px}
+.login .arabic{font-size:20px;color:var(--blue);font-weight:700}
+.login p{color:var(--muted)}
+.form{text-align:left;margin-top:22px}.form label{font-size:13px;font-weight:700;display:block;margin:13px 0 6px}
+.form input,.form select,.form textarea{width:100%;padding:12px 13px;border:1px solid var(--border);border-radius:10px;outline:none;background:#fff}
+.form textarea{min-height:90px;resize:vertical}
+.btn{border:0;border-radius:10px;padding:11px 16px;font-weight:700}
+.primary{background:var(--navy);color:white}.secondary{background:#eaf4f8;color:var(--navy)}
+.danger{background:#fff0f1;color:var(--danger)}
+.login .primary{width:100%;margin-top:20px;padding:13px}
+.demo{font-size:12px;background:var(--light);padding:9px;border-radius:8px;margin-top:16px;color:var(--muted)}
+.app{display:none;min-height:100vh}.sidebar{position:fixed;left:0;top:0;bottom:0;width:245px;background:linear-gradient(180deg,var(--navy),#214f86);color:#fff;padding:20px 14px;z-index:5}
+.brand{display:flex;align-items:center;gap:10px;padding:4px 8px 22px;border-bottom:1px solid rgba(255,255,255,.15)}
+.brand img{width:48px;height:48px;object-fit:contain;background:white;border-radius:12px;padding:4px}
+.brand strong{font-family:Georgia,serif;font-size:16px}.brand small{display:block;opacity:.7;margin-top:2px}
+.nav{margin-top:18px}.nav button{width:100%;background:transparent;color:#dcecf8;border:0;text-align:left;padding:12px 13px;border-radius:10px;margin:2px 0}
+.nav button:hover,.nav button.active{background:rgba(255,255,255,.14);color:#fff}
+.main{margin-left:245px}.topbar{height:72px;background:#fff;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 28px;position:sticky;top:0;z-index:3}
+.topbar h2{margin:0;color:var(--navy);font-size:21px}.user-pill{display:flex;align-items:center;gap:10px;color:var(--muted);font-size:13px}
+.avatar{width:36px;height:36px;border-radius:50%;background:#dff1f5;display:grid;place-items:center;color:var(--navy);font-weight:800}
+.content{padding:26px;max-width:1500px;margin:auto}.page{display:none}.page.active{display:block}
+.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}.card{background:#fff;border:1px solid var(--border);border-radius:16px;padding:18px;box-shadow:0 5px 20px rgba(24,58,115,.04)}
+.stat small{color:var(--muted)}.stat strong{display:block;font-size:29px;margin-top:7px;color:var(--navy)}.stat .accent{color:var(--teal)}
+.grid2{display:grid;grid-template-columns:1.25fr .75fr;gap:18px;margin-top:18px}
+.section-title{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}.section-title h3{margin:0;color:var(--navy)}
+.table-wrap{overflow:auto}.table{width:100%;border-collapse:collapse;font-size:14px}.table th,.table td{padding:12px 10px;border-bottom:1px solid var(--border);text-align:left;white-space:nowrap}.table th{color:var(--muted);font-size:12px;text-transform:uppercase}.badge{display:inline-block;padding:5px 9px;border-radius:999px;font-size:11px;font-weight:700}.good{background:#e6f6ef;color:var(--success)}.warn{background:#fff6df;color:#9a6b00}.bad{background:#fff0f1;color:var(--danger)}.info{background:#e9f4fb;color:var(--navy)}
+.progress{height:9px;background:#e8f0f4;border-radius:99px;overflow:hidden}.progress i{display:block;height:100%;background:linear-gradient(90deg,var(--blue),var(--cyan));border-radius:99px}
+.toolbar{display:flex;gap:9px;flex-wrap:wrap;margin-bottom:16px}.toolbar input,.toolbar select{padding:10px 12px;border:1px solid var(--border);border-radius:9px;background:#fff}
+.modal{display:none;position:fixed;inset:0;background:rgba(12,30,50,.45);z-index:20;align-items:center;justify-content:center;padding:20px}.modal.open{display:flex}.modal-card{width:min(720px,100%);max-height:92vh;overflow:auto;background:#fff;border-radius:18px;padding:24px}.modal-head{display:flex;justify-content:space-between;align-items:center}.modal-head h3{margin:0;color:var(--navy)}.close{border:0;background:#edf4f7;border-radius:50%;width:34px;height:34px}.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px 14px}.full{grid-column:1/-1}.form-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:18px}
+.student-head{display:flex;gap:18px;align-items:center}.student-photo{width:72px;height:72px;border-radius:18px;background:#e7f4f8;display:grid;place-items:center;color:var(--navy);font-size:24px;font-weight:800}
+.tabs{display:flex;gap:4px;border-bottom:1px solid var(--border);margin:20px 0}.tabs button{border:0;background:transparent;padding:10px 14px;color:var(--muted)}.tabs button.active{color:var(--navy);border-bottom:3px solid var(--cyan);font-weight:700}
+.toast{position:fixed;right:20px;bottom:20px;background:var(--navy);color:#fff;padding:12px 16px;border-radius:10px;display:none;z-index:50}
+@media(max-width:1000px){.cards{grid-template-columns:repeat(2,1fr)}.grid2{grid-template-columns:1fr}}
+@media(max-width:720px){.sidebar{width:70px;padding:12px 8px}.brand div,.nav button span{display:none}.brand{justify-content:center}.brand img{width:48px}.nav button{text-align:center;font-size:18px}.main{margin-left:70px}.topbar{padding:0 15px}.content{padding:15px}.cards{grid-template-columns:1fr}.form-grid{grid-template-columns:1fr}.full{grid-column:auto}}
+</style>
+</head>
+<body>
+
+<div id="login" class="login">
+  <div class="login-card">
+    <img class="logo" src="AL MUNEER.png">
+    <div class="arabic">مدرسة المنير لتحفيظ القرآن</div>
+    <h1>AL MUNEER</h1>
+    <p>Quran Memorization School Management System</p>
+    <button class="lang-toggle" id="loginLangBtn" onclick="toggleLanguage()">العربية</button>
+    <div id="loginBox"></div>
+  </div>
+</div>
+
+<div id="app" class="app">
+  <aside class="sidebar">
+    <div class="brand"><img src="AL MUNEER.png"><div><strong>AL MUNEER</strong><small>Quran School</small></div></div>
+    <nav class="nav" id="nav"></nav>
+  </aside>
+  <main class="main">
+    <header class="topbar"><h2 id="pageTitle">Dashboard</h2><div class="user-pill"><button class="lang-toggle" id="langBtn" onclick="toggleLanguage()">العربية</button><div class="avatar" id="avatar">A</div><span id="userLabel">Administrator</span><button class="btn secondary" onclick="logout()">Logout</button></div></header>
+    <div class="content">
+      <section id="dashboard" class="page active"></section>
+      <section id="students" class="page"></section>
+      <section id="teachers" class="page"></section>
+      <section id="attendance" class="page"></section>
+      <section id="quran" class="page"></section>
+      <section id="progressPage" class="page"></section>
+      <section id="weekly" class="page"></section>
+      <section id="monthly" class="page"></section>
+      <section id="analytics" class="page"></section>
+      <section id="settings" class="page"></section>
+    </div>
+  </main>
+</div>
+
+<div id="modal" class="modal"><div class="modal-card" id="modalContent"></div></div>
+<div id="toast" class="toast"></div>
+
+<script>
+let students=JSON.parse(localStorage.getItem('am_students')||'[]');
+let records=JSON.parse(localStorage.getItem('am_records')||'[]');
+let attendance=JSON.parse(localStorage.getItem('am_att')||'[]');
+let teachers=JSON.parse(localStorage.getItem('am_teachers')||'[]');
+let adminAccount=JSON.parse(localStorage.getItem('am_admin')||'null');
+let mustChangePassword=false;
+let loggedInUser=null;
+let role='admin', currentPage='dashboard', selectedStudent=null;
+
+function save(){localStorage.setItem('am_students',JSON.stringify(students));localStorage.setItem('am_records',JSON.stringify(records));localStorage.setItem('am_att',JSON.stringify(attendance));localStorage.setItem('am_teachers',JSON.stringify(teachers));if(adminAccount)localStorage.setItem('am_admin',JSON.stringify(adminAccount))}
+
+let lang = localStorage.getItem('am_lang') || 'en';
+
+const AR = {
+"مدرسة المنير لتحفيظ القرآن":"مدرسة المنير لتحفيظ القرآن",
+"AL MUNEER":"المنير",
+"Quran Memorization School Management System":"نظام إدارة مدرسة المنير لتحفيظ القرآن",
+"Username / Email":"اسم المستخدم / البريد الإلكتروني",
+"Password":"كلمة المرور",
+"Role":"نوع المستخدم",
+"Administrator":"المدير",
+"Teacher":"المعلم",
+"Remember me":"تذكرني",
+"LOGIN":"تسجيل الدخول",
+"Logout":"تسجيل الخروج",
+"Dashboard":"لوحة التحكم",
+"Students":"الطلاب",
+"My Students":"طلابي",
+"Teachers":"المعلمون",
+"Attendance":"الحضور والغياب",
+"Quran Records":"سجلات القرآن",
+"Quran Progress":"متابعة القرآن",
+"Student Progress":"متابعة الطلاب",
+"Weekly Reports":"التقارير الأسبوعية",
+"Monthly Reports":"التقارير الشهرية",
+"Analytics":"الإحصائيات",
+"Settings":"الإعدادات",
+"Total Students":"إجمالي الطلاب",
+"Active Teachers":"المعلمون النشطون",
+"Teachers":"المعلمون",
+"Classes":"الفصول",
+"Present Today":"الحاضرون اليوم",
+"Absent Today":"الغائبون اليوم",
+"Quran Sessions":"جلسات القرآن",
+"Reports Pending":"التقارير المعلقة",
+"Students Needing Attention":"طلاب يحتاجون إلى متابعة",
+"Student Quran Progress":"تقدم الطلاب في القرآن",
+"View All":"عرض الكل",
+"Quick Actions":"إجراءات سريعة",
+"Take Attendance":"تسجيل الحضور",
+"Add Quran Record":"إضافة سجل قرآن",
+"Manage Students":"إدارة الطلاب",
+"Student Management":"إدارة الطلاب",
+"All Students":"جميع الطلاب",
+"Add New Student":"إضافة طالب جديد",
+"Search name or ID...":"البحث بالاسم أو الرقم...",
+"All Classes":"جميع الفصول",
+"Search records...":"البحث في السجلات...",
+"View":"عرض",
+"Status":"الحالة",
+"Active":"نشط",
+"Inactive":"غير نشط",
+"Student Profile":"ملف الطالب",
+"Overview":"نظرة عامة",
+"Current Quran Position":"الموضع الحالي في القرآن",
+"Attendance":"الحضور والغياب",
+"Tajweed":"التجويد",
+"Current Juz":"الجزء الحالي",
+"Current Surah":"السورة الحالية",
+"Attendance Register":"سجل الحضور والغياب",
+"Daily Register":"السجل اليومي",
+"Save Attendance":"حفظ الحضور",
+"Present":"حاضر",
+"Absent":"غائب",
+"Late":"متأخر",
+"Excused":"بعذر",
+"Quran Session Records":"سجلات جلسات القرآن",
+"Date":"التاريخ",
+"Student":"الطالب",
+"Strand":"المسار",
+"Strand Read":"المسار المقروء",
+"Covered Surah / Verses":"السورة / الآيات المنجزة",
+"Next Surah / Verses":"السورة / الآيات القادمة",
+"Tajweed Performance":"مستوى أداء التجويد",
+"Remarks":"الملاحظات",
+"Teacher Remarks":"ملاحظات المعلم",
+"Qa'idah":"القاعدة",
+"Hifdh":"الحفظ",
+"Tilawah":"التلاوة",
+"Excellent":"ممتاز",
+"Very Good":"جيد جداً",
+"Good":"جيد",
+"Satisfactory":"مقبول",
+"Needs Improvement":"يحتاج إلى تحسين",
+"Teacher Management":"إدارة المعلمين",
+"Teacher Accounts":"حسابات المعلمين",
+"Classes":"الفصول",
+"Reports":"التقارير",
+"Submitted":"تم الإرسال",
+"Pending":"معلق",
+"New Weekly Report":"تقرير أسبوعي جديد",
+"Monthly Reports":"التقارير الشهرية",
+"Generate Report":"إنشاء التقرير",
+"System Settings":"إعدادات النظام",
+"School Name":"اسم المدرسة",
+"English Name":"الاسم بالإنجليزية",
+"Primary Theme":"الهوية اللونية",
+"Save Settings":"حفظ الإعدادات",
+"Add Teacher":"إضافة معلم",
+"Edit Teacher":"تعديل المعلم",
+"Assign Class":"تعيين الفصل",
+"Reset Password":"إعادة تعيين كلمة المرور",
+"Total recorded Quran sessions:":"إجمالي جلسات القرآن المسجلة:",
+"Hifdh records:":"سجلات الحفظ:",
+"Tilawah records:":"سجلات التلاوة:",
+"Qa'idah records:":"سجلات القاعدة:",
+"Personal Information":"المعلومات الشخصية",
+"Full Name":"الاسم الكامل",
+"Arabic Name":"الاسم بالعربية",
+"Gender":"الجنس",
+"Date of Birth":"تاريخ الميلاد",
+"Class":"الفصل",
+"Assigned Teacher":"المعلم المسؤول",
+"Father / Guardian":"الأب / ولي الأمر",
+"Phone / WhatsApp":"الهاتف / واتساب",
+"Current Juz":"الجزء الحالي",
+"Current Surah":"السورة الحالية",
+"Current Verse / Starting Point":"الآية الحالية / نقطة البداية",
+"Cancel":"إلغاء",
+"Save Student":"حفظ الطالب",
+"Save Quran Record":"حفظ سجل القرآن",
+"Student added successfully.":"تمت إضافة الطالب بنجاح.",
+"Attendance saved successfully.":"تم حفظ الحضور بنجاح.",
+"Quran record saved successfully.":"تم حفظ سجل القرآن بنجاح.",
+"System Settings":"إعدادات النظام",
+"Arabic":"العربية",
+"English":"English",
+"Welcome Back":"مرحباً بعودتك"
+};
+
+function translateTextNode(node){
+  if(node.nodeType !== 3) return;
+  const original = node.nodeValue.trim();
+  if(!original) return;
+  if(AR[original]) node.nodeValue = node.nodeValue.replace(original, AR[original]);
+}
+function translateDOM(){
+  const root = document.body;
+  if(lang === 'ar'){
+    document.documentElement.lang='ar';
+    document.documentElement.dir='rtl';
+    document.body.classList.add('rtl');
+    root.querySelectorAll('*').forEach(el=>{
+      if(el.childNodes.length===1 && el.firstChild.nodeType===3) translateTextNode(el.firstChild);
+      if(el.placeholder && AR[el.placeholder]) el.placeholder=AR[el.placeholder];
+    });
+    document.querySelectorAll('.lang-toggle').forEach(b=>b.textContent='English');
+  } else {
+    location.reload();
+  }
+}
+function toggleLanguage(){
+  lang = lang==='en' ? 'ar' : 'en';
+  localStorage.setItem('am_lang', lang);
+  if(lang==='ar') translateDOM(); else location.reload();
+}
+
+function renderLogin(){
+ const box=document.getElementById('loginBox');
+ if(!adminAccount){
+   box.innerHTML=`<div class="form"><h3 style="color:var(--navy)">Create Administrator Account</h3>
+   <p style="font-size:13px;color:var(--muted)">This is the first-time setup. Create the administrator account before adding teachers and students.</p>
+   <label>Administrator Username</label><input id="setupUser" autocomplete="username">
+   <label>Administrator Password</label><input id="setupPass" type="password" autocomplete="new-password">
+   <label>Confirm Password</label><input id="setupPass2" type="password" autocomplete="new-password">
+   <button class="btn primary" style="width:100%;margin-top:20px" onclick="createAdmin()">Create Administrator</button></div>`;
+ }else{
+   box.innerHTML=`<div class="form">
+   <label>Username / Email</label><input id="username" autocomplete="username">
+   <label>Password</label><input id="password" type="password" autocomplete="current-password">
+   <label>Role</label><select id="role"><option value="admin">Administrator</option><option value="teacher">Teacher</option></select>
+   <button class="btn primary" style="width:100%;margin-top:20px" onclick="login()">LOGIN</button>
+   <p style="font-size:12px;color:var(--muted);margin-top:12px">Teachers use the account created by the Administrator. On first login, the teacher must change the initial password.</p>
+   </div>`;
+ }
+ if(lang==='ar') setTimeout(translateDOM,30);
+}
+function createAdmin(){
+ const u=document.getElementById('setupUser').value.trim(), p=document.getElementById('setupPass').value, p2=document.getElementById('setupPass2').value;
+ if(!u||!p)return alert(lang==='ar'?'أدخل اسم المستخدم وكلمة المرور.':'Enter a username and password.');
+ if(p!==p2)return alert(lang==='ar'?'كلمتا المرور غير متطابقتين.':'Passwords do not match.');
+ adminAccount={username:u,password:p,firstLogin:false};save();renderLogin();toast(lang==='ar'?'تم إنشاء حساب المدير.':'Administrator account created.');
+}
+function login(){
+ const u=document.getElementById('username').value.trim(), p=document.getElementById('password').value, selectedRole=document.getElementById('role').value;
+ if(selectedRole==='admin'){
+   if(!adminAccount || u!==adminAccount.username || p!==adminAccount.password)return alert(lang==='ar'?'بيانات المدير غير صحيحة.':'Invalid administrator credentials.');
+   role='admin';loggedInUser=adminAccount;mustChangePassword=false;
+ }else{
+   const t=teachers.find(x=>x.username===u && x.password===p && x.status==='Active');
+   if(!t)return alert(lang==='ar'?'بيانات المعلم غير صحيحة.':'Invalid teacher credentials.');
+   role='teacher';loggedInUser=t;mustChangePassword=!!t.mustChangePassword;
+ }
+ if(mustChangePassword){showPasswordChange(true);return;}
+ document.getElementById('login').style.display='none';document.getElementById('app').style.display='block';
+ document.getElementById('userLabel').textContent=role==='admin'?'Administrator':loggedInUser.name;
+ document.getElementById('avatar').textContent=role==='admin'?'A':loggedInUser.name.charAt(0).toUpperCase();
+ buildNav();showPage('dashboard');
+}
+function logout(){document.getElementById('app').style.display='none';document.getElementById('login').style.display='grid'}
+function buildNav(){
+ let items=role==='admin'
+ ? [['dashboard','🏠','Dashboard'],['students','👨‍🎓','Students'],['teachers','👨‍🏫','Teachers'],['attendance','📅','Attendance'],['quran','📖','Quran Records'],['progressPage','📊','Quran Progress'],['weekly','📝','Weekly Reports'],['monthly','📑','Monthly Reports'],['analytics','📈','Analytics'],['settings','⚙️','Settings']]
+ : [['dashboard','🏠','Dashboard'],['students','👨‍🎓','My Students'],['attendance','📅','Attendance'],['quran','📖','Quran Records'],['progressPage','📊','Student Progress'],['weekly','📝','Weekly Reports'],['monthly','📑','Monthly Reports']];
+ document.getElementById('nav').innerHTML=items.map(x=>`<button onclick="showPage('${x[0]}')"><span>${x[1]}&nbsp;</span>${x[2]}</button>`).join('');
+}
+function showPage(id){
+ currentPage=id;document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));document.getElementById(id).classList.add('active');
+ document.querySelectorAll('.nav button').forEach(b=>b.classList.remove('active'));
+ [...document.querySelectorAll('.nav button')].find(b=>b.getAttribute('onclick').includes("'"+id+"'"))?.classList.add('active');
+ const titles={dashboard:'Dashboard',students:role==='admin'?'Student Management':'My Students',teachers:'Teacher Management',attendance:'Attendance Register',quran:'Quran Records',progressPage:'Quran Progress',weekly:'Weekly Reports',monthly:'Monthly Reports',analytics:'Analytics',settings:'Settings'};
+ document.getElementById('pageTitle').textContent=titles[id]; render(id); if(lang==='ar') translateDOM();
+}
+function render(id){
+ if(id==='dashboard')renderDashboard(); if(id==='students')renderStudents(); if(id==='teachers')renderTeachers();
+ if(id==='attendance')renderAttendance(); if(id==='quran')renderQuran(); if(id==='progressPage')renderProgress();
+ if(id==='weekly')renderWeekly(); if(id==='monthly')renderMonthly(); if(id==='analytics')renderAnalytics(); if(id==='settings')renderSettings();
+}
+function renderDashboard(){
+ const present=attendance.filter(a=>a.status==='Present').length;
+ document.getElementById('dashboard').innerHTML=`
+ <div class="cards">
+  <div class="card stat"><small>Total Students</small><strong>${students.length}</strong></div>
+  <div class="card stat"><small>Teachers</small><strong>${role==='admin'?12:1}</strong></div>
+  <div class="card stat"><small>Present Today</small><strong class="accent">${present||'—'}</strong></div>
+  <div class="card stat"><small>Reports Pending</small><strong>${Math.max(0,students.length-records.length)}</strong></div>
+ </div>
+ <div class="grid2">
+  <div class="card"><div class="section-title"><h3>Student Quran Progress</h3><button class="btn secondary" onclick="showPage('progressPage')">View All</button></div>
+   ${students.slice(0,5).map(s=>`<div style="margin:16px 0"><div style="display:flex;justify-content:space-between"><b>${s.name}</b><small>Juz ${s.juz}</small></div><div class="progress" style="margin-top:7px"><i style="width:${Math.min(100,Math.max(20,(parseInt(s.juz)||0)*3))}%"></i></div></div>`).join('')}
+  </div>
+  <div class="card"><div class="section-title"><h3>Quick Actions</h3></div>
+   <div style="display:grid;gap:10px"><button class="btn primary" onclick="showPage('attendance')">📅 Take Attendance</button><button class="btn secondary" onclick="openQuranModal()">📖 Add Quran Record</button><button class="btn secondary" onclick="showPage('weekly')">📝 Weekly Reports</button><button class="btn secondary" onclick="showPage('students')">👨‍🎓 Manage Students</button></div>
+  </div>
+ </div>`;
+}
+function renderStudents(){
+ document.getElementById('students').innerHTML=`
+ <div class="toolbar"><button class="btn primary" onclick="openStudentModal()">+ Add New Student</button><input id="studentSearch" placeholder="Search name or ID..." oninput="renderStudentTable()"><select id="classFilter" onchange="renderStudentTable()"><option value="">All Classes</option><option>Hifdh 1</option><option>Hifdh 2</option><option>Qaida 2</option></select></div>
+ <div class="card"><div class="section-title"><h3>${role==='admin'?'All Students':'My Students'}</h3><span class="badge info">${students.length} Students</span></div><div class="table-wrap"><table class="table"><thead><tr><th>ID</th><th>Student</th><th>Class</th><th>Teacher</th><th>Juz</th><th>Attendance</th><th>Status</th><th></th></tr></thead><tbody id="studentTable"></tbody></table></div></div>`;
+ renderStudentTable();
+}
+function renderStudentTable(){
+ let q=(document.getElementById('studentSearch')?.value||'').toLowerCase(), c=document.getElementById('classFilter')?.value||'';
+ let arr=students.filter(s=>(!q||s.name.toLowerCase().includes(q)||s.id.toLowerCase().includes(q))&&(!c||s.class===c));
+ document.getElementById('studentTable').innerHTML=arr.map(s=>`<tr><td>${s.id}</td><td><b>${s.name}</b><br><small>${s.arabic}</small></td><td>${s.class}</td><td>${s.teacher}</td><td>${s.juz}</td><td><span class="badge ${s.attendance>=90?'good':s.attendance>=75?'warn':'bad'}">${s.attendance}%</span></td><td><span class="badge good">${s.status}</span></td><td><button class="btn secondary" onclick="viewStudent('${s.id}')">View</button></td></tr>`).join('');
+}
+function openStudentModal(){
+ document.getElementById('modalContent').innerHTML=`<div class="modal-head"><h3>Add New Student</h3><button class="close" onclick="closeModal()">×</button></div>
+ <div class="form"><div class="form-grid">
+ <div><label>Full Name</label><input id="f_name"></div><div><label>Arabic Name</label><input id="f_arabic"></div>
+ <div><label>Gender</label><select id="f_gender"><option>Male</option><option>Female</option></select></div><div><label>Date of Birth</label><input id="f_dob" type="date"></div>
+ <div><label>Class</label><select id="f_class"><option>Hifdh 1</option><option>Hifdh 2</option><option>Qaida 2</option></select></div><div><label>Assigned Teacher</label><input id="f_teacher" value="Ustadh Ahmad"></div>
+ <div><label>Father / Guardian</label><input id="f_guardian"></div><div><label>Phone / WhatsApp</label><input id="f_phone"></div>
+ <div><label>Current Juz</label><input id="f_juz" placeholder="e.g. 30"></div><div><label>Current Surah</label><input id="f_surah"></div>
+ <div class="full"><label>Current Verse / Starting Point</label><input id="f_verse"></div>
+ </div><div class="form-actions"><button class="btn secondary" onclick="closeModal()">Cancel</button><button class="btn primary" onclick="saveStudent()">Save Student</button></div></div>`;
+ document.getElementById('modal').classList.add('open');
+ if(lang==='ar') translateDOM();
+}
+function saveStudent(){
+ let name=document.getElementById('f_name').value.trim();if(!name)return alert('Enter student name.');
+ let id='ST'+String(students.length+1).padStart(3,'0');
+ students.push({id,name,arabic:document.getElementById('f_arabic').value,class:document.getElementById('f_class').value,teacher:document.getElementById('f_teacher').value,juz:document.getElementById('f_juz').value||'—',surah:document.getElementById('f_surah').value||'—',verse:document.getElementById('f_verse').value||'—',attendance:100,status:'Active'});
+ save();closeModal();renderStudents();toast('Student added successfully.');
+}
+function viewStudent(id){
+ selectedStudent=students.find(s=>s.id===id);let s=selectedStudent;
+ document.getElementById('modalContent').innerHTML=`<div class="modal-head"><h3>Student Profile</h3><button class="close" onclick="closeModal()">×</button></div>
+ <div class="student-head"><div class="student-photo">${s.name.charAt(0)}</div><div><h2 style="margin:0;color:var(--navy)">${s.name}</h2><div>${s.arabic} · ${s.id}</div><span class="badge info">${s.class}</span></div></div>
+ <div class="cards" style="grid-template-columns:repeat(3,1fr);margin-top:20px"><div class="card stat"><small>Attendance</small><strong>${s.attendance}%</strong></div><div class="card stat"><small>Current Juz</small><strong>${s.juz}</strong></div><div class="card stat"><small>Surah</small><strong style="font-size:20px">${s.surah}</strong></div></div>
+ <div class="tabs"><button class="active">Overview</button><button>Attendance</button><button>Quran Records</button><button>Tajweed</button></div>
+ <div class="card"><h3 style="margin-top:0">Current Quran Position</h3><p><b>${s.surah}</b> — Verse ${s.verse}</p><div class="progress"><i style="width:${Math.min(100,Math.max(15,(parseInt(s.juz)||0)*3))}%"></i></div><p style="color:var(--muted);font-size:13px">Progress is built automatically from teacher Quran records.</p></div>`;
+ document.getElementById('modal').classList.add('open');
+ if(lang==='ar') translateDOM();
+}
+function renderTeachers(){
+ document.getElementById('teachers').innerHTML=`<div class="toolbar"><button class="btn primary" onclick="openTeacherModal()">+ Add Teacher Account</button></div>
+ <div class="card"><div class="section-title"><h3>Teacher Accounts</h3><span class="badge info">${teachers.length} Teachers</span></div>
+ <div class="table-wrap"><table class="table"><thead><tr><th>Teacher</th><th>Username</th><th>Students</th><th>Password Status</th><th>Status</th><th>Actions</th></tr></thead>
+ <tbody>${teachers.map(t=>`<tr><td><b>${t.name}</b></td><td>${t.username}</td><td>${students.filter(s=>s.teacher===t.name).length}</td>
+ <td><span class="badge ${t.mustChangePassword?'warn':'good'}">${t.mustChangePassword?'Initial password':'Password changed'}</span></td>
+ <td><span class="badge ${t.status==='Active'?'good':'bad'}">${t.status}</span></td>
+ <td><button class="btn secondary" onclick="resetTeacherPassword('${t.id}')">Reset Password</button></td></tr>`).join('')}</tbody></table></div></div>`;
+}
+function openTeacherModal(){
+ document.getElementById('modalContent').innerHTML=`<div class="modal-head"><h3>Create Teacher Account</h3><button class="close" onclick="closeModal()">×</button></div>
+ <div class="form"><div class="form-grid">
+ <div><label>Teacher Full Name</label><input id="t_name"></div><div><label>Username</label><input id="t_user"></div>
+ <div><label>Initial Password</label><input id="t_pass" type="password"></div><div><label>Confirm Password</label><input id="t_pass2" type="password"></div>
+ <div class="full"><label>Phone / Email (optional)</label><input id="t_contact"></div>
+ </div><div class="form-actions"><button class="btn secondary" onclick="closeModal()">Cancel</button><button class="btn primary" onclick="createTeacher()">Create Account</button></div></div>`;
+ document.getElementById('modal').classList.add('open');if(lang==='ar')translateDOM();
+}
+function createTeacher(){
+ const name=document.getElementById('t_name').value.trim(), username=document.getElementById('t_user').value.trim(), p=document.getElementById('t_pass').value, p2=document.getElementById('t_pass2').value;
+ if(!name||!username||!p)return alert('Complete the teacher account fields.');
+ if(p!==p2)return alert('Passwords do not match.');
+ if(username===adminAccount.username || teachers.some(t=>t.username===username))return alert('Username already exists.');
+ teachers.push({id:'T'+String(teachers.length+1).padStart(3,'0'),name,username,password:p,mustChangePassword:true,status:'Active'});
+ save();closeModal();renderTeachers();toast('Teacher account created. The teacher must change the initial password on first login.');
+}
+function resetTeacherPassword(id){
+ const t=teachers.find(x=>x.id===id);if(!t)return;
+ const p=prompt('Enter a new initial password for '+t.name+':');if(!p)return;
+ t.password=p;t.mustChangePassword=true;save();renderTeachers();toast('Teacher password reset. The teacher must change it on next login.');
+}
+function showPasswordChange(forTeacher=false){
+ document.getElementById('loginBox').innerHTML=`<div class="form"><h3 style="color:var(--navy)">${forTeacher?'Change Initial Password':'Change Password'}</h3>
+ <p style="font-size:13px;color:var(--muted)">${forTeacher?'Your administrator has given you an initial password. You must create your own password before accessing the system.':'Update your administrator password.'}</p>
+ <label>New Password</label><input id="newPass" type="password" autocomplete="new-password">
+ <label>Confirm New Password</label><input id="newPass2" type="password" autocomplete="new-password">
+ <button class="btn primary" style="width:100%;margin-top:20px" onclick="savePasswordChange(${forTeacher})">Save New Password</button></div>`;
+ if(lang==='ar')translateDOM();
+}
+function savePasswordChange(forTeacher){
+ const p=document.getElementById('newPass').value,p2=document.getElementById('newPass2').value;
+ if(!p||p.length<6)return alert(lang==='ar'?'كلمة المرور يجب أن تكون 6 أحرف على الأقل.':'Password must be at least 6 characters.');
+ if(p!==p2)return alert(lang==='ar'?'كلمتا المرور غير متطابقتين.':'Passwords do not match.');
+ if(forTeacher){loggedInUser.password=p;loggedInUser.mustChangePassword=false;const t=teachers.find(x=>x.id===loggedInUser.id);if(t){t.password=p;t.mustChangePassword=false;}}
+ else {adminAccount.password=p;loggedInUser=adminAccount;}
+ save();mustChangePassword=false;document.getElementById('login').style.display='none';document.getElementById('app').style.display='block';document.getElementById('userLabel').textContent=role==='admin'?'Administrator':loggedInUser.name;document.getElementById('avatar').textContent=role==='admin'?'A':loggedInUser.name.charAt(0).toUpperCase();buildNav();showPage('dashboard');toast('Password changed successfully.');
+}
+function renderAttendance(){
+ let today=new Date().toISOString().slice(0,10);
+ document.getElementById('attendance').innerHTML=`<div class="toolbar"><select id="attClass"><option>All Assigned Students</option><option>Hifdh 1</option><option>Hifdh 2</option></select><input id="attDate" type="date" value="${today}"><button class="btn primary" onclick="saveAttendance()">Save Attendance</button></div><div class="card"><div class="section-title"><h3>Daily Register</h3><span class="badge info">${today}</span></div><table class="table"><thead><tr><th>Student</th><th>Present</th><th>Absent</th><th>Late</th><th>Excused</th></tr></thead><tbody>${students.map(s=>`<tr><td><b>${s.name}</b></td>${['Present','Absent','Late','Excused'].map(st=>`<td><input type="radio" name="att_${s.id}" value="${st}" ${st==='Present'?'checked':''}></td>`).join('')}</tr>`).join('')}</tbody></table></div>`;
+}
+function saveAttendance(){
+ let date=document.getElementById('attDate').value;
+ students.forEach(s=>{let el=document.querySelector(`input[name="att_${s.id}"]:checked`);if(el)attendance.push({student:s.id,date,status:el.value,teacher:role==='admin'?'Administrator':'Teacher'});});
+ save();toast('Attendance saved successfully.');renderAttendance();
+}
+function openQuranModal(){
+ document.getElementById('modalContent').innerHTML=`<div class="modal-head"><h3>Add Quran Record</h3><button class="close" onclick="closeModal()">×</button></div><div class="form"><div class="form-grid">
+ <div><label>Student</label><select id="q_student">${students.map(s=>`<option value="${s.id}">${s.name}</option>`).join('')}</select></div><div><label>Date</label><input id="q_date" type="date" value="${new Date().toISOString().slice(0,10)}"></div>
+ <div><label>Strand Read</label><select id="q_strand"><option>Qa'idah</option><option>Hifdh</option><option>Tilawah</option></select></div>
+ <div><label>Covered Surah / Verses</label><input id="q_covered" placeholder="e.g. Al-Mulk 1–5"></div>
+ <div><label>Next Surah / Verses</label><input id="q_next" placeholder="e.g. Al-Mulk 6–10"></div>
+ <div><label>Tajweed Performance</label><select id="q_taj"><option>Excellent</option><option>Very Good</option><option>Good</option><option>Satisfactory</option><option>Needs Improvement</option></select></div>
+ <div class="full"><label>Tajweed Areas</label><input id="q_areas" placeholder="Makharij, Madd, Ghunnah, Waqf..."></div>
+ <div class="full"><label>Remarks</label><textarea id="q_remarks" placeholder="Teacher's observations..."></textarea></div>
+ </div><div class="form-actions"><button class="btn secondary" onclick="closeModal()">Cancel</button><button class="btn primary" onclick="saveQuran()">Save Quran Record</button></div></div>`;
+ document.getElementById('modal').classList.add('open');
+ if(lang==='ar') translateDOM();
+}
+function saveQuran(){
+ let sid=document.getElementById('q_student').value;
+ let rec={student:sid,date:document.getElementById('q_date').value,strand:document.getElementById('q_strand').value,covered:document.getElementById('q_covered').value,next:document.getElementById('q_next').value,tajweed:document.getElementById('q_taj').value,areas:document.getElementById('q_areas').value,remarks:document.getElementById('q_remarks').value};
+ records.unshift(rec);let s=students.find(x=>x.id===sid);if(s&&rec.covered){let m=rec.covered.match(/([A-Za-z-]+)\s+(\d+)/);if(m){s.surah=m[1];s.verse=m[2]}}save();closeModal();render(currentPage);toast('Quran record saved successfully.');
+}
+function renderQuran(){
+ document.getElementById('quran').innerHTML=`<div class="toolbar"><button class="btn primary" onclick="openQuranModal()">+ Add Quran Record</button><input placeholder="Search records..." oninput="filterQuran(this.value)"></div><div class="card"><div class="section-title"><h3>Quran Session Records</h3><span class="badge info">${records.length} Records</span></div><table class="table"><thead><tr><th>Date</th><th>Student</th><th>Strand</th><th>Covered</th><th>Next</th><th>Tajweed</th><th>Remarks</th></tr></thead><tbody id="quranTable">${quranRows(records)}</tbody></table></div>`;
+}
+function quranRows(arr){return arr.map(r=>{let s=students.find(x=>x.id===r.student)||{name:r.student};return `<tr><td>${r.date}</td><td><b>${s.name}</b></td><td><span class="badge info">${r.strand}</span></td><td>${r.covered||'—'}</td><td>${r.next||'—'}</td><td><span class="badge ${r.tajweed==='Excellent'||r.tajweed==='Very Good'?'good':r.tajweed==='Needs Improvement'?'bad':'warn'}">${r.tajweed}</span></td><td>${r.remarks||'—'}</td></tr>`}).join('')}
+function filterQuran(q){q=q.toLowerCase();document.getElementById('quranTable').innerHTML=quranRows(records.filter(r=>JSON.stringify(r).toLowerCase().includes(q)))}
+function renderProgress(){
+ document.getElementById('progressPage').innerHTML=`<div class="cards">${students.map(s=>`<div class="card"><div class="section-title"><h3>${s.name}</h3><span class="badge info">${s.id}</span></div><p style="margin:0 0 10px;color:var(--muted)">Juz ${s.juz} · ${s.surah}</p><div class="progress"><i style="width:${Math.min(100,Math.max(18,(parseInt(s.juz)||0)*3))}%"></i></div><p style="font-size:12px;color:var(--muted)">Current position: Verse ${s.verse}</p><button class="btn secondary" onclick="viewStudent('${s.id}')">View Profile</button></div>`).join('')}</div>`;
+}
+function renderWeekly(){
+ document.getElementById('weekly').innerHTML=`<div class="card"><div class="section-title"><h3>Weekly Reports</h3><button class="btn primary" onclick="openWeeklyModal()">+ New Weekly Report</button></div><table class="table"><thead><tr><th>Student</th><th>Week</th><th>Quran Progress</th><th>Tajweed</th><th>Status</th><th>PDF</th></tr></thead><tbody>${students.map((s,i)=>`<tr><td>${s.name}</td><td>This Week</td><td>${records.filter(r=>r.student===s.id).length} session(s)</td><td>${records.find(r=>r.student===s.id)?.tajweed||'Pending'}</td><td><span class="badge ${i%3===0?'good':'warn'}">${i%3===0?'Submitted':'Pending'}</span></td><td><button class="btn secondary" onclick="downloadPDFReport('${s.id}','weekly')">PDF</button></td></tr>`).join('')}</tbody></table></div>`;
+}
+function openWeeklyModal(){toast('Weekly report form can be connected to the same Quran and attendance data.')}
+function downloadPDFReport(studentId, type='monthly'){
+ const s=students.find(x=>x.id===studentId); if(!s){alert('No student selected.');return;}
+ const recs=records.filter(r=>r.student===s.id).slice(0,20);
+ const rows=recs.map(r=>`<tr><td>${r.date}</td><td>${r.strand}</td><td>${r.covered||'—'}</td><td>${r.next||'—'}</td><td>${r.tajweed}</td><td>${r.remarks||'—'}</td></tr>`).join('');
+ const w=window.open('','_blank','width=1000,height=800');
+ w.document.write(`<html><head><title>Al Muneer Report - ${s.name}</title><style>body{font-family:Arial,sans-serif;color:#18324d;padding:35px}h1,h2{color:#183a73}table{width:100%;border-collapse:collapse;margin-top:20px}th,td{border:1px solid #dbe7ef;padding:9px;text-align:left}th{background:#eef6fa}.logo{width:90px} .meta{display:grid;grid-template-columns:1fr 1fr;gap:8px}.footer{margin-top:40px;border-top:1px solid #ddd;padding-top:15px}@media print{button{display:none}}</style></head><body>
+ <img class="logo" src="AL MUNEER.png"><h1>مدرسة المنير لتحفيظ القرآن</h1><h2>AL MUNEER QURAN MEMORIZATION SCHOOL</h2>
+ <p><b>Student Report</b> — ${type==='monthly'?'Monthly':'Weekly'}</p><div class="meta"><div><b>Student:</b> ${s.name}</div><div><b>Student ID:</b> ${s.id}</div><div><b>Class:</b> ${s.class}</div><div><b>Teacher:</b> ${s.teacher||'—'}</div><div><b>Attendance:</b> ${s.attendance}%</div><div><b>Current Juz:</b> ${s.juz}</div></div>
+ <h3>Quran Progress</h3><p><b>Current Surah:</b> ${s.surah} &nbsp; <b>Verse:</b> ${s.verse}</p>
+ <h3>Quran Records</h3><table><thead><tr><th>Date</th><th>Strand</th><th>Covered</th><th>Next</th><th>Tajweed</th><th>Remarks</th></tr></thead><tbody>${rows||'<tr><td colspan="6">No Quran records entered.</td></tr>'}</tbody></table>
+ <div class="footer">Teacher Signature: ____________________ &nbsp;&nbsp;&nbsp; Administrator: ____________________</div>
+ <script>window.onload=()=>setTimeout(()=>window.print(),300);<\/script></body></html>`);
+ w.document.close();
+}
+function renderMonthly(){
+ document.getElementById('monthly').innerHTML=`<div class="card"><div class="section-title"><h3>Monthly Reports</h3></div>
+ <p style="color:var(--muted)">Reports are generated from the attendance and Quran records entered into the system. Use <b>Download PDF</b> to open a print-ready report and save it as PDF.</p>
+ <div class="table-wrap"><table class="table"><thead><tr><th>Student</th><th>Attendance</th><th>Quran Sessions</th><th>Latest Tajweed</th><th>PDF</th></tr></thead><tbody>
+ ${students.map(s=>`<tr><td>${s.name}</td><td>${s.attendance}%</td><td>${records.filter(r=>r.student===s.id).length}</td><td>${records.find(r=>r.student===s.id)?.tajweed||'—'}</td><td><button class="btn primary" onclick="downloadPDFReport('${s.id}','monthly')">Download PDF</button></td></tr>`).join('')||'<tr><td colspan="5">No students have been added yet.</td></tr>'}</tbody></table></div></div>`;
+}
+function renderAnalytics(){
+ document.getElementById('analytics').innerHTML=`<div class="cards"><div class="card stat"><small>Average Attendance</small><strong>${Math.round(students.reduce((a,b)=>a+b.attendance,0)/students.length)}%</strong></div><div class="card stat"><small>Quran Records</small><strong>${records.length}</strong></div><div class="card stat"><small>Excellent Attendance</small><strong>${students.filter(s=>s.attendance>=90).length}</strong></div><div class="card stat"><small>Needs Attention</small><strong>${students.filter(s=>s.attendance<75).length}</strong></div></div>
+ <div class="grid2"><div class="card"><h3>Attendance Overview</h3>${students.map(s=>`<p><b>${s.name}</b> <span style="float:right">${s.attendance}%</span></p><div class="progress"><i style="width:${s.attendance}%"></i></div>`).join('')}</div><div class="card"><h3>Quran Activity</h3><p>Total recorded Quran sessions: <b>${records.length}</b></p><p>Hifdh records: <b>${records.filter(r=>r.strand==='Hifdh').length}</b></p><p>Tilawah records: <b>${records.filter(r=>r.strand==='Tilawah').length}</b></p><p>Qa'idah records: <b>${records.filter(r=>r.strand==="Qa'idah").length}</b></p></div></div>`;
+}
+function renderSettings(){
+ document.getElementById('settings').innerHTML=`<div class="card"><h3>Account & System Settings</h3>
+ <div class="form">
+ <label>School Name</label><input value="مدرسة المنير لتحفيظ القرآن" disabled>
+ <label>English Name</label><input value="AL MUNEER QURAN MEMORIZATION SCHOOL" disabled>
+ <hr style="border:0;border-top:1px solid var(--border);margin:20px 0">
+ <h4 style="color:var(--navy)">Change My Password</h4>
+ <label>New Password</label><input id="settingsNewPass" type="password">
+ <label>Confirm New Password</label><input id="settingsNewPass2" type="password">
+ <button class="btn primary" onclick="changePasswordFromSettings()">Change Password</button>
+ </div></div>`;
+}
+function changePasswordFromSettings(){
+ const p=document.getElementById('settingsNewPass').value,p2=document.getElementById('settingsNewPass2').value;
+ if(!p||p.length<6)return alert('Password must be at least 6 characters.');
+ if(p!==p2)return alert('Passwords do not match.');
+ if(role==='admin'){adminAccount.password=p;loggedInUser=adminAccount;}else{loggedInUser.password=p;const t=teachers.find(x=>x.id===loggedInUser.id);if(t)t.password=p;}
+ save();toast('Password changed successfully.');
+}
+function closeModal(){document.getElementById('modal').classList.remove('open')}
+function toast(msg){let t=document.getElementById('toast');t.textContent=msg;t.style.display='block';setTimeout(()=>t.style.display='none',2500)}
+window.addEventListener('click',e=>{if(e.target.id==='modal')closeModal()});
+if(lang==='ar'){ document.documentElement.lang='ar'; document.documentElement.dir='rtl'; document.body.classList.add('rtl'); setTimeout(()=>translateDOM(),50); }
+renderLogin();
+</script>
+</body>
+</html>
